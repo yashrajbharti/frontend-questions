@@ -7,6 +7,7 @@ function curry(fn) {
     }
   };
 }
+// This is best example of currying
 
 // // Example Usage
 // function add(a, b, c) {

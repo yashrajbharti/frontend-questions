@@ -209,4 +209,4 @@ class UncaughtPromiseError extends Error {
   }
 }
 
-module.exports = MyPromise;
+export default MyPromise;
