@@ -11,15 +11,15 @@ const Counter = () => {
 // 🔹 useState() – Managing State
 
 const CounterExample = () => {
-    const [count, setCount] = useState(0);
-  
-    return (
-      <div>
-        <p>Count: {count}</p>
-        <button onClick={() => setCount(count + 1)}>Increment</button>
-      </div>
-    );
-  };
+  const [count, setCount] = useState(0);
+
+  return (
+    <div>
+      <p>Count: {count}</p>
+      <button onClick={() => setCount(count + 1)}>Increment</button>
+    </div>
+  );
+};
 
 // 🔹 useEffect() – Side Effects & Lifecycle Methods
 // The useEffect hook is used for side effects (API calls, subscriptions, DOM updates).
@@ -38,7 +38,6 @@ const DataFetcher = () => {
   return <pre>{JSON.stringify(data, null, 2)}</pre>;
 };
 
-
 // 🔹 useRef() – Accessing DOM & Keeping Persistent Values
 // The useRef hook:
 
@@ -46,29 +45,26 @@ const DataFetcher = () => {
 // Stores values without causing re-renders.
 
 const FocusInput = () => {
-    const inputRef = useRef(null);
-  
-    useEffect(() => {
-      inputRef.current.focus(); // Auto-focus input
-    }, []);
-  
-    return <input ref={inputRef} placeholder="Type here..." />;
-  };
+  const inputRef = useRef(null);
 
+  useEffect(() => {
+    inputRef.current.focus(); // Auto-focus input
+  }, []);
+
+  return <input ref={inputRef} placeholder="Type here..." />;
+};
 
 // 🔹 useMemo() – Optimizing Performance
 // Prevents expensive calculations from running on every render.
 
 const ExpensiveCalculation = ({ num }) => {
-    const computedValue = useMemo(() => {
-      console.log("Calculating...");
-      return num * 2;
-    }, [num]); // Runs only when `num` changes
-  
-    return <p>Computed Value: {computedValue}</p>;
+  const computedValue = useMemo(() => {
+    console.log("Calculating...");
+    return num * 2;
+  }, [num]); // Runs only when `num` changes
+
+  return <p>Computed Value: {computedValue}</p>;
 };
-
-
 
 // 🔹 useCallback() – Memoizing Functions
 // Prevents unnecessary re-creation of functions.
@@ -98,7 +94,6 @@ const App = () => {
   );
 };
 
-
 // Custom Hooks
 // You can create your own Hooks for reusable logic.
 
@@ -122,7 +117,14 @@ const useFetch = (url) => {
 
 // Usage:
 const AppCustom = () => {
-  const { data, loading } = useFetch("https://jsonplaceholder.typicode.com/todos/1");
+  // This is a CUSTOM hook
+  const { data, loading } = useFetch(
+    "https://jsonplaceholder.typicode.com/todos/1"
+  );
 
-  return loading ? <p>Loading...</p> : <pre>{JSON.stringify(data, null, 2)}</pre>;
+  return loading ? (
+    <p>Loading...</p>
+  ) : (
+    <pre>{JSON.stringify(data, null, 2)}</pre>
+  );
 };
