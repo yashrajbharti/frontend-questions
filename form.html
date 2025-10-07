@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <form action="">
+        <fieldset>
+            <legend>Check input num validity</legend>
+            <label for="number">Age</label>
+            <input type="number" name="number" id="number" max="200" min="18" required>
+        </fieldset>
+        <button type="submit">Submit</button>
+    </form>
+
+    <script>
+        const form = document.querySelector("form");
+        const input = document.querySelector("input");
+
+        form.addEventListener("submit", (e) => {
+            e.preventDefault();
+            validate(input)
+        });
+
+        function validate(input) {
+            const validityState = input.validity;
+
+            if (validityState.valueMissing) {
+                input.setCustomValidity("You gotta fill this out, yo!");
+            } else if (validityState.rangeUnderflow) {
+                input.setCustomValidity("We need a higher number!");
+            } else if (validityState.rangeOverflow) {
+                input.setCustomValidity("Thats too high!");
+            } else {
+                input.setCustomValidity("");
+            }
+
+            input.reportValidity();
+        }
+    </script>
+</body>
+
+</html>
