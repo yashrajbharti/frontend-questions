@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calendar</title>
+
+    <style>
+        table {
+            overflow-x: auto;
+            inline-size: 600px;
+            font-family: system-ui;
+            border: 1px solid gray;
+        }
+
+        .holiday {
+            color: red;
+        }
+
+        thead {
+            background-color: rgb(247, 222, 222);
+        }
+    </style>
+</head>
+
+<body>
+    <table>
+        <caption>Month of Sep</caption>
+        <thead>
+            <th scope="col" class="holiday">Sun</th>
+            <th scope="col">Mon</th>
+            <th scope="col">Tue</th>
+            <th scope="col">Wed</th>
+            <th scope="col">Thu</th>
+            <th scope="col">Fri</th>
+            <th scope="col">Sat</th>
+        </thead>
+        <tbody>
+
+        </tbody>
+    </table>
+
+
+    <script>
+        const date = new Date();
+        const currentMonth = date.getMonth();
+        const currentYear = date.getFullYear();
+        const tbody = document.querySelector("tbody");
+
+        const firstDayOfWeek = new Date(currentYear, currentMonth, 1).getDay(); // 0=Sun
+        const lastDate = new Date(currentYear, currentMonth + 1, 0).getDate();
+
+        const fragment = document.createDocumentFragment();
+        let tr = document.createElement("tr");
+
+        for (let i = 0; i < firstDayOfWeek; i++) {
+            const td = document.createElement("td");
+            tr.appendChild(td);
+        }
+
+        for (let day = 1; day <= lastDate; day++) {
+            const td = document.createElement("td");
+            td.textContent = day;
+
+            const dayOfWeek = (firstDayOfWeek + day - 1) % 7;
+            if (dayOfWeek === 0) td.classList.add("holiday");
+
+            tr.appendChild(td);
+
+            if (dayOfWeek === 6) {
+                fragment.appendChild(tr);
+                tr = document.createElement("tr");
+            }
+        }
+
+        if (tr.children.length > 0) {
+            fragment.appendChild(tr);
+        }
+
+        // Single append
+        tbody.appendChild(fragment);
+    </script>
+</body>
+
+</html>
