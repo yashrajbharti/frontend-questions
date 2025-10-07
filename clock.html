@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            padding: 20px;
+        }
+
+        .container {
+            inline-size: 400px;
+            block-size: 400px;
+            position: relative;
+        }
+
+        ul {
+            list-style: none;
+            position: relative;
+            inline-size: 200px;
+            block-size: 200px;
+            rotate: -90deg;
+        }
+
+        li {
+            position: absolute;
+            transform-origin: -200px;
+            translate: 200px 200px;
+            rotate: var(--angle, 0deg);
+        }
+
+        li span {
+            display: inline-block;
+            rotate: calc(-1 * var(--angle, 0deg) + 90deg);
+        }
+
+        .hand {
+            position: absolute;
+            block-size: 5px;
+            inline-size: 200px;
+            background-color: black;
+            inset-inline-start: 50%;
+            inset-block-start: 50%;
+            translate: -100% -50%;
+            transform-origin: 100%;
+        }
+
+        .hour {
+            block-size: 10px;
+            inline-size: 100px;
+        }
+
+        .minute {
+            block-size: 8px;
+        }
+
+        .second {
+            background-color: red;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="clock">
+        <time datetime=""></time>
+
+        <div class="container">
+            <ul>
+                <li style="--angle: 30deg;"><span>1</span></li>
+                <li style="--angle: 60deg;"><span>2</span></li>
+                <li style="--angle: 90deg;"><span>3</span></li>
+                <li style="--angle: 120deg;"><span>4</span></li>
+                <li style="--angle: 150deg;"><span>5</span></li>
+                <li style="--angle: 180deg;"><span>6</span></li>
+                <li style="--angle: 210deg;"><span>7</span></li>
+                <li style="--angle: 240deg;"><span>8</span></li>
+                <li style="--angle: 270deg;"><span>9</span></li>
+                <li style="--angle: 300deg;"><span>10</span></li>
+                <li style="--angle: 330deg;"><span>11</span></li>
+                <li style="--angle: 360deg;"><span>12</span></li>
+            </ul>
+
+            <div class="hour hand"></div>
+            <div class="minute hand"></div>
+            <div class="second hand"></div>
+        </div>
+    </div>
+
+    <script>
+        const time = document.querySelector("time");
+        const hourHand = document.querySelector(".hour");
+        const minuteHand = document.querySelector(".minute");
+        const secondHand = document.querySelector(".second");
+
+        function tick() {
+            const date = new Date();
+            const hours = date.getHours();
+            const minutes = date.getMinutes();
+            const seconds = date.getSeconds();
+
+            hourHand.style.rotate = 360 * ((hours + (minutes / 60)) / 12) + 90 + "deg";
+            minuteHand.style.rotate = 360 * ((minutes + seconds / 60) / 60) + 90 + "deg";
+            secondHand.style.rotate = 360 * (seconds / 60) + 90 + "deg";
+
+            const formattedTime = `${hours.toString().padStart(2, "0")}:${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
+            time.textContent = formattedTime;
+            time.dateTime = formattedTime;
+
+            requestAnimationFrame(tick);
+        }
+
+        tick();
+    </script>
+
+</body>
+
+</html>
