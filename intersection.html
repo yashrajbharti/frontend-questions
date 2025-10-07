@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.src = entry.target.dataset.src
+                    observer.unobserve(entry)
+                }
+            })
+        }, {
+            root: null,
+            rootMargin: 0,
+            threshold: 0.5
+        })
+
+
+        const img = document.querySelectorAll("img")
+
+        img.forEach(image => observer.observe(image))
+
+    </script>
+</body>
+
+</html>
