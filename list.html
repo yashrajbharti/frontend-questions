@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .disclosure {
+            --row: 0fr;
+            display: grid;
+            grid-template-rows: 1.4rem var(--row);
+        }
+
+        @media (prefers-reduced-motion: no-preference) {
+            .disclosure {
+                transition: visibility 0.3s, grid-template-rows 0.3s;
+            }
+        }
+
+        .disclosure>[aria-expanded] {
+            width: fit-content;
+        }
+
+        .disclosure>[aria-expanded="false"]+.disclosure-content {
+            visibility: hidden;
+        }
+
+        .disclosure:has([aria-expanded="true"]) {
+            --row: 1fr;
+        }
+
+        .disclosure .disclosure-content {
+            overflow: hidden;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="disclosure">
+        <button aria-expanded="false" aria-controls="content">
+            Show details
+        </button>
+        <div class="disclosure-content" id="content">
+            <p>Detailed content goes here… Lorem ipsum dolor, sit amet consectetur adipisicing elit. Maiores in, error,
+                eos quasi eius adipisci ducimus similique fugit repellendus omnis velit eveniet deleniti dolorem
+                doloribus. Aliquid vitae amet ducimus temporibus.</p>
+        </div>
+    </div>
+
+    <script>
+        const button = document.querySelector("button");
+        button.addEventListener("click", (e) => {
+            button.setAttribute(
+                "aria-expanded", button.getAttribute("aria-expanded") === "false"
+            );
+        });
+    </script>
+</body>
+
+</html>
