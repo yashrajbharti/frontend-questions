@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+
+    <script>
+        const svgEl = document.querySelector("svg")
+
+        const serializedSVG = new XMLSerializer().serializeToString(svgEl)
+
+        const blob = new Blob([serializedSVG], { type: "image/svg+xml" })
+
+        const url = URL.createObjectURL(blob)
+
+
+        const img = document.querySelector("img")
+
+        const canvas = document.createElement("canvas")
+        canvas.width = img.naturalWidth
+        canvas.height = img.naturalHeight
+        const ctx = canvas.getContext("2d")
+
+        ctx.drawImage(img, 0, 0)
+
+        canvas.toBlob((blob) => {
+            const url = URL.createObjectURL(blob);
+            document.querySelector("img").src = url;
+        });
+    </script>
+
+</body>
+
+</html>
