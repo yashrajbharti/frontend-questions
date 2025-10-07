@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Draggable Div</title>
+    <style>
+        .drag {
+            inline-size: 50px;
+            block-size: 50px;
+            background-color: coral;
+            position: absolute;
+            top: 50px;
+            left: 50px;
+            cursor: grab;
+            touch-action: none;
+            /* prevent scrolling on touch drag */
+        }
+
+        .drag:active {
+            cursor: grabbing;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="drag"></div>
+
+    <script>
+        const drag = document.querySelector(".drag");
+
+        let offsetX = 0, offsetY = 0;
+        let isDragging = false;
+
+        function getCoords(e) {
+            if (e.touches) {
+                return { x: e.touches[0].clientX, y: e.touches[0].clientY };
+            }
+            return { x: e.clientX, y: e.clientY };
+        }
+
+        drag.addEventListener("mousedown", (e) => startDrag(e));
+        drag.addEventListener("touchstart", (e) => startDrag(e));
+
+        function startDrag(e) {
+            isDragging = true;
+            const { x, y } = getCoords(e);
+            offsetX = x - drag.offsetLeft;
+            offsetY = y - drag.offsetTop;
+
+            document.addEventListener("mousemove", onMove);
+            document.addEventListener("mouseup", stopDrag);
+            document.addEventListener("touchmove", onMove);
+            document.addEventListener("touchend", stopDrag);
+        }
+
+        function onMove(e) {
+            if (!isDragging) return;
+            const { x, y } = getCoords(e);
+            drag.style.left = x - offsetX + "px";
+            drag.style.top = y - offsetY + "px";
+        }
+
+        function stopDrag() {
+            isDragging = false;
+            document.removeEventListener("mousemove", onMove);
+            document.removeEventListener("mouseup", stopDrag);
+            document.removeEventListener("touchmove", onMove);
+            document.removeEventListener("touchend", stopDrag);
+        }
+    </script>
+</body>
+
+</html>
