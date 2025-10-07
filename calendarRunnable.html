@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Calendar</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        section {
+            display: block;
+            overflow-x: auto;
+            max-inline-size: 100%;
+        }
+
+        table {
+            font-family: system-ui, sans-serif;
+            font-size: 2rem;
+            border-collapse: collapse;
+            /* IMPORTANT ^ */
+
+            &>caption {
+                background-color: tomato;
+                padding: 10px;
+                border-radius: 10px 10px 0 0;
+            }
+
+            th,
+            td {
+                border: 1px solid gray;
+            }
+
+            th {
+                text-align: center;
+                min-inline-size: 3ch;
+                padding: 15px;
+            }
+
+            td {
+                text-align: center;
+            }
+
+            tr:not(:has(td:not(:empty))) td {
+                border: none;
+            }
+
+            button:empty {
+                display: none;
+            }
+
+            button {
+                border: none;
+                font-size: 2rem;
+                background-color: transparent;
+                inline-size: 100%;
+                block-size: 100%;
+                cursor: pointer;
+                padding: 15px;
+            }
+
+            button:focus {
+                outline: 2px solid olive;
+            }
+
+            [aria-current='date'] {
+                background-color: aquamarine;
+            }
+
+            [aria-selected='true'] {
+                background-color: greenyellow;
+            }
+
+            .range {
+                background-color: lightgoldenrodyellow;
+            }
+        }
+
+        div {
+            text-align: center;
+            font-size: 1.5rem;
+            padding: 10px;
+            font-family: system-ui, sans-serif;
+
+            &[role="status"] {
+                color: gray;
+            }
+
+            &[role="alert"] {
+                color: tomato;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <section>
+        <table>
+            <caption>Month of Sep, 2025</caption>
+            <thead>
+                <tr>
+                    <th scope="col">Sun</th>
+                    <th scope="col">Mon</th>
+                    <th scope="col">Tue</th>
+                    <th scope="col">Wed</th>
+                    <th scope="col">Thu</th>
+                    <th scope="col">Fri</th>
+                    <th scope="col">Sat</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </section>
+
+    <div role="status">No range selected</div>
+
+    <script>
+        const tbody = document.querySelector("tbody");
+        const date = new Date();
+        const today = date.getDate();
+        const month = date.getMonth(); // assume Sep
+        const year = date.getFullYear();
+        const status = document.querySelector('[role="status"]');
+
+        const firstDate = 1;
+        const lastDate = new Date(year, month + 1, 0).getDate(); // 30
+        const offsetDate = new Date(year, month, 1).getDay(); // weekday of 1st
+        const numberOfDays = offsetDate + lastDate;
+
+        const fragment = document.createDocumentFragment();
+        let cellIndex = 0;
+
+        for (let rows = 1; rows <= Math.ceil(numberOfDays / 7); rows++) {
+            const trow = document.createElement("tr");
+            for (let col = 1; col <= 7; col++) {
+                const tdata = document.createElement("td");
+                const button = document.createElement("button");
+                button.dataset.index = cellIndex++;
+                tdata.appendChild(button);
+                trow.appendChild(tdata);
+            }
+            fragment.appendChild(trow);
+        }
+        tbody.appendChild(fragment);
+
+        const buttons = document.querySelectorAll("button");
+
+        for (let i = firstDate; i <= lastDate; i++) {
+            buttons[i + offsetDate - 1].textContent = i;
+            if (i === today) {
+                buttons[i + offsetDate - 1].setAttribute("aria-current", "date");
+            }
+        }
+
+        let startIndex = -1;
+        let endIndex = -1;
+
+        tbody.addEventListener("click", (e) => {
+            if (e.target.matches("button")) {
+                setRange(+e.target.dataset.index);
+            }
+        });
+
+        function setRange(index) {
+            if (startIndex !== -1 && endIndex !== -1) {
+                startIndex = -1;
+                endIndex = -1;
+            }
+
+            if (startIndex === -1 && endIndex === -1) {
+                startIndex = index;
+            } else if (endIndex === -1) {
+                if (index <= startIndex) {
+                    startIndex = index;
+                } else {
+                    endIndex = index;
+                }
+            }
+
+            buttons.forEach((button, i) => {
+                if (i === startIndex || i === endIndex) {
+                    button.setAttribute("aria-selected", "true");
+                } else {
+                    button.removeAttribute("aria-selected");
+                }
+                if (i > startIndex && i < endIndex) {
+                    button.classList.add("range");
+                } else {
+                    button.classList.remove("range");
+                }
+            });
+            if (startIndex !== -1 && endIndex !== -1) {
+                status.textContent =
+                    `Selected range: ${formatAsDate(buttons[startIndex].textContent)} to ${formatAsDate(buttons[endIndex].textContent)}`;
+            }
+            else if (startIndex === numberOfDays - 1) {
+                status.textContent = "Invalid Range"
+            }
+            else if (startIndex !== -1) {
+                status.textContent =
+                    `Select an end date after ${formatAsDate(buttons[startIndex].textContent)}`;
+            } else {
+                status.textContent = "No range selected";
+            }
+        }
+
+        function formatAsDate(day) {
+            return new Date(year, month, day).toLocaleDateString(undefined, {
+                month: "short",
+                day: "2-digit",
+                year: "numeric"
+            });
+        }
+    </script>
+</body>
+
+</html>
